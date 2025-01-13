@@ -1,0 +1,31 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600">
+     <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+       <h2 class="text-2xl font-bold text-center mb-6">📝 Détails du Voyage</h2>
+   
+       <form [formGroup]="detailsForm" (ngSubmit)="continueBooking()">
+         <div class="mb-4">
+           <label class="block text-gray-700">Nombre de passagers</label>
+           <input formControlName="passengers" type="number" placeholder="Ex: 3"
+                  class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+         </div>
+   
+         <div class="mb-4">
+           <label class="block text-gray-700">Nombre de bagages</label>
+           <input formControlName="luggage" type="number" placeholder="Ex: 2"
+                  class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+         </div>
+   
+         <div class="mb-4">
+           <label class="block text-gray-700">Numéro de voyage</label>
+           <input formControlName="tripNumber" type="text" placeholder="Ex: 12A345"
+                  class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+         </div>
+   
+         <button type="submit"
+                 class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
+           ➡️ Continuer la Réservation
+         </button>
+       </form>
+     </div>
+   </div>
+   

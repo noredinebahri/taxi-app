@@ -1,0 +1,30 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-500 to-teal-600">
+     <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+          <h2 class="text-2xl font-bold text-center mb-6">👤 Informations Client</h2>
+
+          <form [formGroup]="clientForm" (ngSubmit)="continueToPrice()">
+               <div class="mb-4">
+                    <label class="block text-gray-700">Nom Complet</label>
+                    <input formControlName="fullName" type="text" placeholder="Ex: Ahmed Benali"
+                         class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400">
+               </div>
+
+               <div class="mb-4">
+                    <label class="block text-gray-700">Téléphone</label>
+                    <input formControlName="phone" type="tel" placeholder="Ex: +212 600 000 000"
+                         class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400">
+               </div>
+
+               <div class="mb-4">
+                    <label class="block text-gray-700">Email</label>
+                    <input formControlName="email" type="email" placeholder="Ex: client@email.com"
+                         class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400">
+               </div>
+
+               <button (click)="continueToPrice()"
+                    class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+                    ➡️ Voir le Prix
+               </button>
+          </form>
+     </div>
+</div>
