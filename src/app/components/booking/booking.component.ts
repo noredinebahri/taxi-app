@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
+import { routes } from '../../app.routes';
 
 @Component({
   selector: 'app-booking',
@@ -39,8 +40,6 @@ export class BookingComponent implements OnInit {
     private bookingService: BookingService,
     private translate: TranslateService
   ) {
-    console.log(this.translate);
-    
     this.translate.addLangs(['en', 'fr', 'es', 'ar']);
     this.translate.setDefaultLang('en'); // Définit la langue par défaut
     this.bookingForm = this.fb.group({
@@ -111,7 +110,6 @@ export class BookingComponent implements OnInit {
 
       // Sauvegarder temporairement les données
       localStorage.setItem('bookingData', JSON.stringify(bookingData));
-
       // Redirection vers la page des détails
       console.log('Données de réservation sauvegardées.');
     } else {
