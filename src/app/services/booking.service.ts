@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Booking } from '../models/booking.model';
 import { API_CONFIG } from '../config/api.config';
 
@@ -20,7 +20,7 @@ export class BookingService {
     return this.http.post(`${this.apiUrl}/ride`, data);
   }
   getAirports(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/airports`);
+    return this.http.get(`${this.apiUrl}/airports`).pipe(tap(d => console.log(d)));
   }
 
   getCitiesByAirport(airportId: string): Observable<any> {

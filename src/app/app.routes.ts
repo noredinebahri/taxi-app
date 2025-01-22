@@ -9,7 +9,8 @@ import { PriceDetailsComponent } from './components/price-details/price-details.
 
 export const routes: Routes = [
      { path: '', component: HomeComponent },
-     { path: 'booking', component: BookingComponent, canActivate: [AuthGuard] },
+     { path: 'booking', component: BookingComponent},
+   
      { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
      { path: 'client-info', component: ClientInfoComponent },
      { path: 'price-details', component: PriceDetailsComponent }, // Affichage du prix
