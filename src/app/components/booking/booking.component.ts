@@ -6,8 +6,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
-import { ToastrService } from 'ngx-toastr';
-import { PaymentService } from '../../services/payment.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -21,18 +19,24 @@ import { Router } from '@angular/router';
 })
 export class BookingComponent {
   bookingForm: FormGroup;
-
+  order: boolean = true;
   airports: any[] = [];
   cities: string[] = [];
   places: string[] = [];
-
+  isAnimating: boolean = false;
   constructor(private fb: FormBuilder, private bookingService: BookingService, private router: Router) {
     this.bookingForm = this.fb.group({
       airport: ['', Validators.required],
       city: ['', Validators.required]
     });
   }
+  animateTaxiIcon(): void {
+    this.isAnimating = true;
 
+  }
+  inverseInput() {
+    this.order = !this.order
+  }
   ngOnInit(): void {
     this.loadAirports();
     this.loadPlacesByCity()
@@ -53,23 +57,20 @@ export class BookingComponent {
   }
   onAirportChange(event: any): void {
     const airportId = event.target.value;
-   
+
   }
 
   onCityChange(event: any): void {
     const city = event.target.value;
-   
   }
 
   submitBooking(): void {
-    console.log("dddddddd");
-    
     if (this.bookingForm.valid) {
       const bookingData = this.bookingForm.value;
-      
+
       // Sauvegarder temporairement les données
       localStorage.setItem('bookingData', JSON.stringify(bookingData));
-  
+
       // Redirection vers la page des détails
       this.router.navigate(['/trip-details']);
   }

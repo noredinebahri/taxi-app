@@ -1,0 +1,48 @@
+.with-80 {
+  width: 80%;
+  float: left;
+}
+.with-20 {
+  width: 10%;
+  margin-left: 85%;
+
+  img {
+    margin-top: 62px;
+    float: right;
+    cursor: pointer;
+  }
+}
+// move tehe (taxiIconMove) icon taxi from right to the left
+
+
+.taxi-container {
+  position: relative; /* ensures the child can be positioned absolutely inside */
+  width: 80%;       /* adjust as needed */
+  height: 50px;       /* adjust as needed */
+  overflow: hidden;   /* hides any overflow if desired */
+}
+
+/* 2) The default state of the icon */
+.taxi-container div {
+  position: absolute;
+  top: 0;
+  right: 0;
+  /* Adjust size or style as needed */
+  font-size: 24px;
+}
+
+/* 3) Animation class - triggers only when .taxiIconMove is applied */
+.taxiIconMove {
+  animation: moveIconTaxi 2s 2;        /* 5s duration, repeat 2 times */
+  animation-direction: alternate;      /* moves forth and back */
+}
+
+/* 4) Keyframes to move from right to left */
+@keyframes moveIconTaxi {
+  0% {
+    right: 0;       /* start fully on the right */
+  }
+  100% {
+    right: 100%;    /* push it leftwards; ensures it travels across container */
+  }
+}

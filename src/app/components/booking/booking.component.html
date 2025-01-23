@@ -1,35 +1,62 @@
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-600">
   <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
     <h2 class="text-2xl font-bold text-center mb-6">🚖 Réserver un Taxi</h2>
-
     <form [formGroup]="bookingForm" (ngSubmit)="submitBooking()">
       <!-- Sélection de l'Aéroport -->
-      <div class="mb-4">
-        <label class="block text-gray-700">Aéroport de départ</label>
-        <select formControlName="airport" (change)="onAirportChange($event)"
-                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
-          <option value="" disabled selected>Choisir un aéroport</option>
-          <option *ngFor="let airport of airports" [value]="airport.airport_id">{{ airport.airport_name }}</option>
-        </select>
-      </div>
+        <div class="with-20">
+          <img (click)="inverseInput()" src="../../../assets/inverse.png" alt="">
+        </div>
+        <div class="with-80">
+          @if (order) {
+            <div class="mb-4">
+              <label class="block text-gray-700">Aéroport Départ</label>
+              <select formControlName="airport" (change)="onAirportChange($event)"
+                      class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+                <option value="" disabled selected>Choisir un aéroport</option>
+                <option *ngFor="let airport of airports" [value]="airport.airport_id">{{ airport.airport_name }}</option>
+              </select>
+            </div>
+            <div class="mb-4">
+              <label class="block text-gray-700">La ville Déstination</label>
+              <select formControlName="city" (change)="onCityChange($event)"
+                      class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+                <option value="" disabled selected>Choisir une ville</option>
+                <option *ngFor="let city of citiesMorocco" [value]="city.city_id">{{ city.city_name }}</option>
+              </select>
+            </div>
+          } @else {
+            <div class="mb-4">
+              <label class="block text-gray-700">la Ville Départ</label>
+              <select formControlName="city" (change)="onCityChange($event)"
+                      class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+                <option value="" disabled selected>Choisir une ville</option>
+                <option *ngFor="let city of citiesMorocco" [value]="city.city_id">{{ city.city_name }}</option>
+              </select>
+            </div>
 
-      <!-- Sélection de la Ville -->
-      <div class="mb-4">
-        <label class="block text-gray-700">Ville de destination</label>
-        <select formControlName="city" (change)="onCityChange($event)"
-                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
-          <option value="" disabled selected>Choisir une ville</option>
-          <option *ngFor="let city of citiesMorocco" [value]="city.city_id">{{ city.city_name }}</option>
-        </select>
-      </div>
-
-     
-
-      <button type="submit"
-      (click)="submitBooking()"
-              class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
-        🚕 Réserver
-      </button>
+            <div class="mb-4">
+              <label class="block text-gray-700">Aéroport Déstination</label>
+              <select formControlName="airport" (change)="onAirportChange($event)"
+                      class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+                <option value="" disabled selected>Choisir un aéroport</option>
+                <option *ngFor="let airport of airports" [value]="airport.airport_id">{{ airport.airport_name }}</option>
+              </select>
+            </div>
+          }
+        </div>
+        <div class="taxi-container">
+          <button
+            type="submit"
+            (click)="animateTaxiIcon()"
+            class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition"
+          >
+            <!-- Only apply 'taxiIconMove' when 'isAnimating' is true -->
+            <div [ngClass]="{ 'taxiIconMove': isAnimating }">
+              🚕
+            </div>
+            Réserver
+          </button>
+        </div>
     </form>
   </div>
 </div>
