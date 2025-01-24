@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BookingService } from '../../services/booking.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -8,26 +8,43 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { forkJoin } from 'rxjs';
+import { routes } from '../../app.routes';
 
 @Component({
   selector: 'app-booking',
   standalone: true,
-  imports: [ReactiveFormsModule, MatSnackBarModule, MatInputModule, MatFormFieldModule, MatDatepickerModule, MatCardModule, CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    MatSnackBarModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatCardModule,
+    CommonModule,
+    TranslatePipe,
+  ],
   providers: [MatSnackBar],
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.scss'],
 })
-export class BookingComponent {
+export class BookingComponent implements OnInit {
   bookingForm: FormGroup;
-  order: boolean = true;
+
   airports: any[] = [];
   cities: string[] = [];
   places: string[] = [];
-  isAnimating: boolean = false;
+
   constructor(private fb: FormBuilder, private bookingService: BookingService, private router: Router) {
     this.bookingForm = this.fb.group({
       airport: ['', Validators.required],
-      city: ['', Validators.required]
+      city: ['', Validators.required],
+    });
+
+    // Écoute les changements de langue
+    this.translate.onLangChange.subscribe(() => {
+      this.translateAirportNames(); // Traduire les noms à chaque changement de langue
     });
   }
   animateTaxiIcon(): void {
@@ -39,22 +56,45 @@ export class BookingComponent {
   }
   ngOnInit(): void {
     this.loadAirports();
-    this.loadPlacesByCity()
+    this.loadCities();
   }
 
+  // Charger les aéroports et les traduire
   loadAirports(): void {
     this.bookingService.getAirports().subscribe({
-      next: (data: any) => this.airports = data,
-      error: (err: any) => console.error('Erreur de chargement des aéroports', err)
+      next: (data: any[]) => {
+        this.airports = data;
+        this.translateAirportNames(); // Traduire les noms
+      },
+      error: (err) => console.error('Erreur de chargement des aéroports', err),
     });
   }
-  citiesMorocco: any;
-  loadPlacesByCity(): void {
+
+  // Traduire les noms des aéroports
+  translateAirportNames(): void {
+    const translationObservables = this.airports.map((airport) =>
+      this.translate.get(airport.airport_name)
+    );
+
+    // Attendre que toutes les traductions soient prêtes
+    forkJoin(translationObservables).subscribe((translations: string[]) => {
+      this.airports = this.airports.map((airport, index) => ({
+        ...airport,
+        airport_name: translations[index], // Appliquer la traduction
+      }));
+    });
+  }
+
+  // Charger les villes
+  loadCities(): void {
     this.bookingService.getCities().subscribe({
-      next: (data: any) => this.citiesMorocco = data,
-      error: (err: any) => console.error('Erreur de chargement des aéroports', err)
+      next: (data: any[]) => {
+        this.citiesMorocco = data;
+      },
+      error: (err) => console.error('Erreur de chargement des villes', err),
     });
   }
+
   onAirportChange(event: any): void {
     const airportId = event.target.value;
 
@@ -62,6 +102,7 @@ export class BookingComponent {
 
   onCityChange(event: any): void {
     const city = event.target.value;
+
   }
 
   submitBooking(): void {
@@ -72,7 +113,9 @@ export class BookingComponent {
       localStorage.setItem('bookingData', JSON.stringify(bookingData));
 
       // Redirection vers la page des détails
-      this.router.navigate(['/trip-details']);
+      console.log('Données de réservation sauvegardées.');
+    } else {
+      console.error('Le formulaire est invalide.');
+    }
   }
-}
 }

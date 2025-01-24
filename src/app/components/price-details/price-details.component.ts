@@ -17,7 +17,24 @@ export class PriceDetailsComponent implements OnInit {
   airportName: string = '';
   cityName: string = '';
   errorMessage: string = '';
-
+  selectedCity: string = '';
+  bookingId: string = '';
+  cancelBooking(): void {
+    if (confirm('Êtes-vous sûr d’annuler ?')) {
+      // this.bookingService.cancelBooking(this.bookingId)
+      //   .subscribe({
+      //     next: () => alert('Réservation annulée.'),
+      //     error: (err) => console.error('Erreur lors de l’annulation', err),
+      //   });
+    }
+  }
+  payWithStripe(): void {
+    // this.stripeService.processPayment({ amount: this.price, currency: 'MAD' })
+    //   .subscribe({
+    //     next: () => alert('Paiement réussi !'),
+    //     error: (err) => console.error('Erreur de paiement', err),
+    //   });
+  }
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
@@ -59,8 +76,4 @@ export class PriceDetailsComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  cancelBooking(): void {
-    alert('❌ Réservation annulée');
-    this.router.navigate(['/']);
-  }
 }

@@ -1,6 +1,26 @@
-<nav>
-     <button mat-button (click)="navigateTo('')">Accueil</button>
-     <button mat-button class="button" (click)="navigateTo('booking')">Réserver</button>
-
-   </nav>
+<header class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50">
+     <nav class="container mx-auto flex justify-between items-center py-4 px-6">
+          <div class="text-3xl font-extrabold text-blue-700">🚖 TaxiSaaS</div>
+          <button class="md:hidden text-blue-700 text-3xl focus:outline-none" (click)="toggleMenu()">☰</button>
+          <ul [ngClass]="{'hidden': !isMenuOpen, 'flex flex-col md:flex-row md:space-x-8 space-y-4 md:space-y-0 text-lg': true}"
+               class="absolute md:relative bg-white md:bg-transparent top-16 md:top-0 left-0 md:flex md:items-center w-full md:w-auto p-6 md:p-0 shadow-md md:shadow-none">
+               <li><a href="#features" (click)="closeMenu()"
+                         class="hover:text-blue-600 transition duration-300">{{ 'FEATURES' | translate }}</a></li>
+               <li><a href="#testimonials" (click)="closeMenu()"
+                         class="hover:text-blue-600 transition duration-300">{{ 'TESTIMONIALS' | translate }}</a></li>
+               <li><a href="#contact" (click)="closeMenu()"
+                         class="hover:text-blue-600 transition duration-300">{{ 'CONTACT' | translate }}</a></li>
+               <li>
+                   <select (change)="changeLanguage($event)" class="p-2 border rounded-lg text-blue-700">
+                       <option value="en">English</option>
+                       <option value="fr">Français</option>
+                       <option value="es">Español</option>
+                       <option value="ar">العربية</option>
+                   </select>
+               </li>
+          </ul>
+          <button
+               class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 px-6 rounded-full shadow-lg hover:scale-105 transition transform duration-300 hidden md:block" routerLink="/booking">{{ 'BOOK_NOW' | translate }}</button>
+     </nav>
+   </header>
    
