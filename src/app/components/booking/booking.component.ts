@@ -31,12 +31,18 @@ import { routes } from '../../app.routes';
 })
 export class BookingComponent implements OnInit {
   bookingForm: FormGroup;
-
   airports: any[] = [];
-  cities: string[] = [];
-  places: string[] = [];
+  citiesMorocco: any[] = [];
+  language: string = 'en'; // Langue actuelle
 
-  constructor(private fb: FormBuilder, private bookingService: BookingService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private bookingService: BookingService,
+    private translate: TranslateService,
+    private router: Router
+  ) {
+    this.translate.addLangs(['en', 'fr', 'es', 'ar']);
+    this.translate.setDefaultLang('en'); // Définit la langue par défaut
     this.bookingForm = this.fb.group({
       airport: ['', Validators.required],
       city: ['', Validators.required],
@@ -47,13 +53,7 @@ export class BookingComponent implements OnInit {
       this.translateAirportNames(); // Traduire les noms à chaque changement de langue
     });
   }
-  animateTaxiIcon(): void {
-    this.isAnimating = true;
 
-  }
-  inverseInput() {
-    this.order = !this.order
-  }
   ngOnInit(): void {
     this.loadAirports();
     this.loadCities();
@@ -113,6 +113,7 @@ export class BookingComponent implements OnInit {
       localStorage.setItem('bookingData', JSON.stringify(bookingData));
 
       // Redirection vers la page des détails
+      this.router.navigate(["/client-info"]);
       console.log('Données de réservation sauvegardées.');
     } else {
       console.error('Le formulaire est invalide.');

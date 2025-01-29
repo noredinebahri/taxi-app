@@ -1,19 +1,21 @@
 <!-- Section principale avec design amélioré et responsive -->
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-300 to-purple-500 px-4">
   <!-- Conteneur principal -->
-  <div class="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-5xl flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
+  <div
+    class="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-5xl flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
 
     <!-- Résumé du trajet -->
     <div class="w-full md:w-1/2 bg-gray-50 p-6 rounded-2xl shadow-md">
       <h3 class="text-2xl font-bold text-gray-800 mb-6">✨ Votre Voyage</h3>
       <ul class="text-gray-700 space-y-4">
         <li class="flex items-center space-x-2"><span>🚗</span> <strong>Distance :</strong> {{ distance }} km</li>
-        <li class="flex items-center space-x-2"><span>💰</span> <strong>Prix :</strong> {{ price }} MAD</li>
-      
+        <li class="flex items-center space-x-2"><span>💰</span> <strong>Prix :</strong> {{ price }} USD</li>
+
         <li class="flex items-center space-x-2"><span>⏱️</span> <strong>Temps d'attente :</strong> 1 heure incluse</li>
         <li class="flex items-center space-x-2"><span>🅿️</span> <strong>Parking :</strong> Gratuit</li>
         <li class="flex items-center space-x-2"><span>🙋‍♂️</span> <strong>Accueil :</strong> Inclus</li>
-        <li class="flex items-center space-x-2"><span>🎁</span> <strong>Offres: </strong> Wi-Fi gratuit, boissons offertes</li>
+        <li class="flex items-center space-x-2"><span>🎁</span> <strong>Offres: </strong> Wi-Fi gratuit, boissons
+          offertes</li>
         <li class="flex items-center space-x-2"><span>🛣️</span> <strong>Frais d'autoroute :</strong> Inclus</li>
       </ul>
     </div>
@@ -29,18 +31,34 @@
       <ng-template #priceDetails>
         <p class="text-lg text-gray-800 mb-6 text-center">
           🚖 <strong>Distance :</strong> {{ distance }} km<br>
-          💰 <strong>Prix :</strong> {{ price }} MAD
+          💰 <strong>Prix :</strong> {{ price }} USD
+        </p>
+        <div>
+          <p class="text-2xl font-semibold text-gray-800 ">Changer la devise :           
+            <span  [ngClass]="{'dropdown': isDropdownOpen}" class="btn-change-currency">
+            <button  (click)="toggleDropdown()">
+              <img [src]="getFlag(selectedCurrency)" width="40"  class="mr-2" />
+            </button>
+            <ul *ngIf="isDropdownOpen" class="dropdown-menu">
+              <li *ngFor="let currency of currenciesWithFlags" (click)="selectCurrency(currency.code)">
+               <img [src]="currency.flag" width="20" height="15"  />
+              </li>
+            </ul>
+          </span></p>
+          <p class="mt-4 text-lg font-semibold" *ngIf="currencyChanged">
+            Prix à payer : <span class="text-blue-500">{{ convertedAmount }} {{ selectedCurrency }}</span>
+          </p>
+        </div>
+        <p class="text-center text-green-700 font-semibold mb-4">🎉 Réservez maintenant pour des avantages exclusifs !
         </p>
 
-        <p class="text-center text-green-700 font-semibold mb-4">🎉 Réservez maintenant pour des avantages exclusifs !</p>
-
-        <button (click)="payWithStripe()"
-                class="w-full bg-green-600 text-white py-3 rounded-full hover:bg-green-700 transition font-bold flex items-center justify-center shadow-lg">
-          💳 Payer maintenant
+        <button (click)="createCheckoutSession(price, 'distance : '+distance+' km')"
+          class="w-full bg-green-600 text-white py-3 rounded-full hover:bg-green-700 transition font-bold flex items-center justify-center shadow-lg">
+          💳 Payer {{ convertedAmount === 0 ? price: convertedAmount }} {{ selectedCurrency }}
         </button>
 
         <button (click)="cancelBooking()"
-                class="w-full bg-red-500 text-white py-3 rounded-full hover:bg-red-600 transition mt-4 font-bold flex items-center justify-center shadow-lg">
+          class="w-full bg-red-500 text-white py-3 rounded-full hover:bg-red-600 transition mt-4 font-bold flex items-center justify-center shadow-lg">
           ❌ Annuler la réservation
         </button>
       </ng-template>

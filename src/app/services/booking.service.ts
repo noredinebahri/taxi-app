@@ -15,7 +15,10 @@ export class BookingService {
   getAllBookings(): Observable<any> {
     return this.http.get(`${this.apiUrl}/rides`);
   }
-
+  convertCurrency(amount: number, from: string, to: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/convertCurrency`, { amount, fromCurrency: from, toCurrency: to });
+  }
+  
   createBooking(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/ride`, data);
   }

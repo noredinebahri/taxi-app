@@ -2,15 +2,113 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { loadStripe, Stripe } from '@stripe/stripe-js';
+import { BookingService } from '../../services/booking.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-price-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './price-details.component.html',
   styleUrls: ['./price-details.component.scss'],
 })
 export class PriceDetailsComponent implements OnInit {
+  stripe: Stripe | null = null;
+  currencies: string[] = [
+    "AUD", "BGN", "BRL", "CAD", "CHF", "CNY", "CZK", "DKK", "EUR", "GBP", 
+    "HKD", "HRK", "HUF", "IDR",  "INR", "ISK", "JPY", "KRW", "MXN", 
+    "MYR", "NOK", "NZD", "PHP", "PLN", "RON", "RUB", "SEK", "SGD", "THB", 
+    "TRY", "USD", "ZAR"
+];; // Liste des devises
+isDropdownOpen: boolean = false;
+toggleDropdown() {
+  this.isDropdownOpen = !this.isDropdownOpen;
+}
+
+selectCurrency(code: string) {
+  this.selectedCurrency = code;
+  this.isDropdownOpen = false;
+  this.convertCurrency()
+}
+
+getFlag(code: string): string {
+  const currency = this.currenciesWithFlags.find(c => c.code === code);
+  return currency ? currency.flag : '';
+}
+currenciesWithFlags: { code: string, flag: string }[] = [
+  { code: "AUD", flag: "https://flagcdn.com/w40/au.png" },
+  { code: "BGN", flag: "https://flagcdn.com/w40/bg.png" },
+  { code: "BRL", flag: "https://flagcdn.com/w40/br.png" },
+  { code: "CAD", flag: "https://flagcdn.com/w40/ca.png" },
+  { code: "CHF", flag: "https://flagcdn.com/w40/ch.png" },
+  { code: "CNY", flag: "https://flagcdn.com/w40/cn.png" },
+  { code: "CZK", flag: "https://flagcdn.com/w40/cz.png" },
+  { code: "DKK", flag: "https://flagcdn.com/w40/dk.png" },
+  { code: "EUR", flag: "https://flagcdn.com/w40/eu.png" },
+  { code: "GBP", flag: "https://flagcdn.com/w40/gb.png" },
+  { code: "HKD", flag: "https://flagcdn.com/w40/hk.png" },
+  { code: "HRK", flag: "https://flagcdn.com/w40/hr.png" },
+  { code: "HUF", flag: "https://flagcdn.com/w40/hu.png" },
+  { code: "IDR", flag: "https://flagcdn.com/w40/id.png" },
+  { code: "INR", flag: "https://flagcdn.com/w40/in.png" },
+  { code: "ISK", flag: "https://flagcdn.com/w40/is.png" },
+  { code: "JPY", flag: "https://flagcdn.com/w40/jp.png" },
+  { code: "KRW", flag: "https://flagcdn.com/w40/kr.png" },
+  { code: "MXN", flag: "https://flagcdn.com/w40/mx.png" },
+  { code: "MYR", flag: "https://flagcdn.com/w40/my.png" },
+  { code: "NOK", flag: "https://flagcdn.com/w40/no.png" },
+  { code: "NZD", flag: "https://flagcdn.com/w40/nz.png" },
+  { code: "PHP", flag: "https://flagcdn.com/w40/ph.png" },
+  { code: "PLN", flag: "https://flagcdn.com/w40/pl.png" },
+  { code: "RON", flag: "https://flagcdn.com/w40/ro.png" },
+  { code: "RUB", flag: "https://flagcdn.com/w40/ru.png" },
+  { code: "SEK", flag: "https://flagcdn.com/w40/se.png" },
+  { code: "SGD", flag: "https://flagcdn.com/w40/sg.png" },
+  { code: "THB", flag: "https://flagcdn.com/w40/th.png" },
+  { code: "TRY", flag: "https://flagcdn.com/w40/tr.png" },
+  { code: "USD", flag: "https://flagcdn.com/w40/us.png" },
+  { code: "ZAR", flag: "https://flagcdn.com/w40/za.png" }
+];
+  amount: number = 0; // Montant à convertir
+  selectedCurrency: string = 'USD'; // Devise sélectionnée
+  baseCurrency: string = 'USD'; // Devise de base
+  convertedAmount: number = 0; // Montant converti
+
+  async createCheckoutSession(amount: number, description: string) {
+    const response = await fetch('http://localhost:3000/api/v1/booking/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: this.convertedAmount, // Prix dynamique calculé
+        currency: this.selectedCurrency, // Devise (par défaut : USD)
+        description: description, // Description du service
+      }),
+    });
+    const { sessionId } = await response.json();
+    // Redirection vers Stripe Checkout
+    const stripe = await loadStripe('pk_test_51KYsoWLQSEoYz0V0mf90aQ2jVfS8fM1440I5xKpCmpnWONeV9SlAJJ6UosWLoHKCQVE6c8CkZNkuBcFEHKEQuQ7V00mXIy08HL');
+    stripe?.redirectToCheckout({ sessionId });
+  }
+  onCurrencyChange() {
+    this.convertCurrency(); // Appeler la conversion dès que l'utilisateur change la devise
+  }
+  currencyChanged: boolean = false;
+  convertCurrency() {
+    this.bookingService.convertCurrency(this.price, this.baseCurrency, this.selectedCurrency).subscribe({
+      next: (response) => {
+        this.convertedAmount = response.currency;
+        this.currencyChanged = true;
+      },
+      error: (err) => {
+        console.error('Erreur de conversion de devise', err);
+      }
+    });
+  }
+
+  currency: any;
+ 
+  
   price: number = 0;
   distance: number = 0;
   isLoading: boolean = true;
@@ -35,11 +133,11 @@ export class PriceDetailsComponent implements OnInit {
     //     error: (err) => console.error('Erreur de paiement', err),
     //   });
   }
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private bookingService: BookingService) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
     const bookingData = JSON.parse(localStorage.getItem('bookingData') || '{}');
-
+    this.stripe = await loadStripe('pk_test_51KYsoWLQSEoYz0V0mf90aQ2jVfS8fM1440I5xKpCmpnWONeV9SlAJJ6UosWLoHKCQVE6c8CkZNkuBcFEHKEQuQ7V00mXIy08HL');
     // Vérifier si les données sont complètes
     if (!bookingData.airport || !bookingData.city) {
       this.errorMessage = '🚨 Information de réservation incomplètes.';

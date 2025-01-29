@@ -7,3 +7,34 @@
 .bg-red-500:hover {
      background-color: rgb(226, 62, 62) !important;
 }
+
+.dropdown {
+     position: absolute;
+     background: aliceblue;
+     padding: 1%;
+     display: block;
+     width: 3em;
+     overflow: auto;
+     height: 13em;
+     padding: 1.5em;
+     outline: 1px solid #a782f9;
+}
+.btn-change-currency {
+     color: rgb(223, 223, 223);
+     padding: 0;
+     text-align: center;
+     text-decoration: none;
+     display: inline-block;
+     font-size: 16px;
+     margin: 4px 2px;
+     cursor: pointer;
+}
+li {
+     list-style-type: none;
+     padding: 5px;
+     cursor: pointer;
+     img {
+          padding: 2%;
+          width: 40px !important;
+     }    
+}
