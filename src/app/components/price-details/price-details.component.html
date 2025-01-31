@@ -52,7 +52,7 @@
         <p class="text-center text-green-700 font-semibold mb-4">🎉 Réservez maintenant pour des avantages exclusifs !
         </p>
 
-        <button (click)="createCheckoutSession(price, 'distance : '+distance+' km')"
+        <button (click)="createCheckoutSession( convertedAmount === 0 ? price: convertedAmount , 'distance : '+distance+' km')"
           class="w-full bg-green-600 text-white py-3 rounded-full hover:bg-green-700 transition font-bold flex items-center justify-center shadow-lg">
           💳 Payer {{ convertedAmount === 0 ? price: convertedAmount }} {{ selectedCurrency }}
         </button>

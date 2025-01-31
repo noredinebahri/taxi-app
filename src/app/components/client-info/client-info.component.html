@@ -11,9 +11,17 @@
 
                <div class="mb-4">
                     <label class="block text-gray-700">Téléphone</label>
-                    <input formControlName="phone" type="tel" placeholder="Ex: +212 600 000 000"
-                         class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400">
-               </div>
+                    <input formControlName="phone" type="tel" placeholder="Ex: +33 600 000 000"
+                           class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400">
+                    <div *ngIf="clientForm.get('phone').errors && clientForm.get('phone').touched">
+                      <small class="text-red-500" *ngIf="clientForm.get('phone').errors['required']">
+                        Phone number is required.
+                      </small>
+                      <small class="text-red-500" *ngIf="clientForm.get('phone').errors['invalidPhoneNumber']">
+                        Please enter a valid phone number.
+                      </small>
+                    </div>
+                  </div>
 
                <div class="mb-4">
                     <label class="block text-gray-700">Email</label>
@@ -21,7 +29,9 @@
                          class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-400">
                </div>
 
-               <button (click)="continueToPrice()"
+               <button type="submit"
+               [ngClass]="{'disabled': !clientForm.valid}"
+               [disabled]="!clientForm.valid"
                     class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
                     ➡️ Voir le Prix
                </button>

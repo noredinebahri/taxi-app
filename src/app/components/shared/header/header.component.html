@@ -1,4 +1,4 @@
-<header class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50">
+<header class="bg-white/80 top-bar  backdrop-blur-md shadow-md sticky top-0 z-50" *ngIf="authService.isLoggedIn()">
      <nav class="container mx-auto flex justify-between items-center py-4 px-6">
           <div class="text-3xl font-extrabold text-blue-700">🚖 TaxiSaaS</div>
           <button class="md:hidden text-blue-700 text-3xl focus:outline-none" (click)="toggleMenu()">☰</button>
@@ -11,16 +11,23 @@
                <li><a href="#contact" (click)="closeMenu()"
                          class="hover:text-blue-600 transition duration-300">{{ 'CONTACT' | translate }}</a></li>
                <li>
-                   <select (change)="changeLanguage($event)" class="p-2 border rounded-lg text-blue-700">
-                       <option value="en">English</option>
-                       <option value="fr">Français</option>
-                       <option value="es">Español</option>
-                       <option value="ar">العربية</option>
-                   </select>
+                    <button
+                    class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 px-6 rounded-full shadow-lg hover:scale-105 transition transform duration-300 hidden md:block" (click)="booking()">{{ 'BOOK_NOW' | translate }}</button>
+               </li>
+               <li>
+                    <select (change)="changeLanguage($event)" class="p-2 border rounded-lg text-blue-700">
+                         <option value="en">English</option>
+                         <option value="fr">Français</option>
+                         <option value="es">Español</option>
+                         <option value="ar">العربية</option>
+                     </select>
+          
                </li>
           </ul>
           <button
-               class="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black py-2 px-6 rounded-full shadow-lg hover:scale-105 transition transform duration-300 hidden md:block" routerLink="/booking">{{ 'BOOK_NOW' | translate }}</button>
+          class="bg-gradient-to-r from-red-400 to-red-600 text-black py-2 px-6 rounded-full shadow-lg hover:scale-105 transition transform duration-300 hidden md:block" (click)="authService.logout()">{{ 'LOGOUT' | translate }}</button>
+              
+               
      </nav>
    </header>
    

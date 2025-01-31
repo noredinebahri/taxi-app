@@ -80,7 +80,7 @@ currenciesWithFlags: { code: string, flag: string }[] = [
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        amount: this.convertedAmount, // Prix dynamique calculé
+        amount: amount, // Prix dynamique calculé
         currency: this.selectedCurrency, // Devise (par défaut : USD)
         description: description, // Description du service
       }),

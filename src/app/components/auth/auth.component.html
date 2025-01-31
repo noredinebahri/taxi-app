@@ -1,0 +1,73 @@
+<div class="auth-container">
+  <mat-tab-group class="auth-form" [(selectedIndex)]="selectedTab">
+    <!-- Onglet Connexion -->
+    <mat-tab label="Connexion">
+      <form [formGroup]="loginForm" (ngSubmit)="login()" class="form-content">
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Entrez votre email" formControlName="email">
+         
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Mot de passe</mat-label>
+          <input matInput type="password" placeholder="Entrez votre mot de passe" formControlName="password">
+          
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" class="submit-button" [disabled]="!loginForm.valid">Se connecter</button>
+      </form>
+    </mat-tab>
+
+    <!-- Onglet Inscription -->
+    <mat-tab label="Inscription">
+      <form [formGroup]="signupForm" (ngSubmit)="signup()" class="form-content">
+        <mat-form-field appearance="fill">
+          <mat-label>Prénom</mat-label>
+          <input matInput placeholder="Entrez votre prénom" formControlName="first_name">
+          <mat-error *ngIf="signupForm.get('first_name').errors?.required">Prénom est requis.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Nom</mat-label>
+          <input matInput placeholder="Entrez votre nom" formControlName="last_name">
+          <mat-error *ngIf="signupForm.get('last_name').errors?.required">Nom est requis.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" placeholder="Entrez votre email" formControlName="email">
+          <mat-error *ngIf="signupForm.get('email').errors?.required">Email est requis.</mat-error>
+          <mat-error *ngIf="signupForm.get('email').errors?.email">Veuillez entrer un email valide.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Mot de passe</mat-label>
+          <input matInput type="password" placeholder="Choisissez un mot de passe" formControlName="password">
+          <mat-error *ngIf="signupForm.get('password').errors?.required">Mot de passe est requis.</mat-error>
+          <mat-error *ngIf="signupForm.get('password').errors?.minlength">Le mot de passe doit comporter au moins 6 caractères.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Devise préférée</mat-label>
+          <mat-select formControlName="currency">
+            <mat-option value="USD">USD - Dollar</mat-option>
+            <mat-option value="EUR">EUR - Euro</mat-option>
+            <mat-option value="MAD">MAD - Dirham</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Langue</mat-label>
+          <mat-select formControlName="language">
+            <mat-option value="fr">Français</mat-option>
+            <mat-option value="en">English</mat-option>
+            <mat-option value="ar">العربية</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="accent" class="submit-button" [disabled]="!signupForm.valid">S'inscrire</button>
+      </form>
+    </mat-tab>
+  </mat-tab-group>
+</div>

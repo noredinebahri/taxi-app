@@ -12,7 +12,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
-  constructor(private router: Router, private translate: TranslateService ,private authService: AuthService) {
+  constructor(private router: Router, private translate: TranslateService ,public authService: AuthService) {
     this.translate.addLangs(['en', 'fr', 'es', 'ar']);
     this.translate.setDefaultLang('en');
   }
@@ -24,7 +24,9 @@ export class HeaderComponent {
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
-
+  booking() {
+    this.router.navigate(['/booking']);
+  }
   // Fermer le menu quand on clique sur un lien
   closeMenu(): void {
     this.isMenuOpen = false;
@@ -35,6 +37,6 @@ export class HeaderComponent {
 
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/']);
+    this.router.navigate(['/auth']);
   }
 }

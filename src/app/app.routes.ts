@@ -9,17 +9,26 @@ import { PriceDetailsComponent } from './components/price-details/price-details.
 import { CancelComponent } from './cancel/cancel.component';
 import { SuccessComponent } from './success/success.component';
 import { PaymentComponent } from './components/payment/payment.component';
+import { AuthComponent } from './components/auth/auth.component';
+import { VerifyComponent } from './components/auth/verify/verify.component';
+import { NoAuthGuard } from './guards/notAuth.guard';
 
 export const routes: Routes = [
      { path: '', component: HomeComponent },
-     { path: 'booking', component: BookingComponent },
+     { path: 'booking', component: BookingComponent, canActivate: [AuthGuard] },
      { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-     { path: 'client-info', component: ClientInfoComponent },
-     { path: 'price-details', component: PriceDetailsComponent }, // Affichage du prix
+     { path: 'client-info', component: ClientInfoComponent, canActivate: [AuthGuard] },
+     { path: 'price-details', component: PriceDetailsComponent, canActivate: [AuthGuard] }, // Affichage du prix
+     { path: 'trip-details', component: TripDetailsComponent, canActivate: [AuthGuard] },
 
-     { path: 'trip-details', component: TripDetailsComponent },
-     { path: 'cancel', component: CancelComponent },
-     { path: 'payment', component: PaymentComponent },
-     { path: 'success', component: SuccessComponent },
-     { path: '**', redirectTo: 'booking' }
+     //auth
+     { path: 'auth', component: AuthComponent, canActivate: [NoAuthGuard] },
+     { path: 'verify/:token', component: VerifyComponent },
+
+     //payments
+     { path: 'cancel', component: CancelComponent, canActivate: [AuthGuard] },
+     { path: 'payment', component: PaymentComponent, canActivate: [AuthGuard] },
+     { path: 'success', component: SuccessComponent, canActivate: [AuthGuard] },
+
+     { path: '**', redirectTo: 'auth' }
 ];

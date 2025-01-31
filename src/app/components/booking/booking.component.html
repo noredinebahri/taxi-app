@@ -23,7 +23,9 @@
       </div>
 
       <button type="submit"
-      (click)="submitBooking()"        
+      (click)="submitBooking()"
+      [disabled]="!bookingForm.valid"
+      [ngClass]="{'disabled': !bookingForm.valid}"    
       class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
         🚕 {{ 'RESERVE_NOW' | translate }}
       </button>

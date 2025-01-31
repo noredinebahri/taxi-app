@@ -1,0 +1,9 @@
+<div class="verify-container">
+     <div *ngIf="isLoading" class="loading">
+       <p>Verifying your account...</p>
+     </div>
+     <div *ngIf="!isLoading">
+       <p>{{ message }}</p>
+       <button (click)="redirectToLogin()" class="btn">Go to Login</button>
+     </div>
+   </div>

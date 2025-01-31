@@ -1,0 +1,43 @@
+.auth-form {
+  margin-top: 5%;
+  width: 100%; // Full width within its container
+  max-width: 360px; // Max width for the form
+  padding: 20px;
+  margin: auto; // Center the form in the middle of the page vertically and horizontally
+  background-color: #ffffff; // White background
+  border-radius: 8px; // Rounded corners
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Subtle shadow
+
+  mat-form-field {
+    width: 100%; // Full width
+    margin-bottom: 16px; // Space between form fields
+
+    .mat-form-field-infix {
+      padding: 8px 0; // Padding inside the input area
+    }
+  }
+
+  button {
+    width: 100%; // Full width button
+    margin-top: 20px; // Margin on top for the button
+    padding: 12px; // Padding inside the button
+    font-size: 16px; // Larger font size
+    background-color: #0056b3; // Custom color for the button
+    color: white; // White text
+
+    &:hover {
+      background-color: #003a70; // Darker blue on hover
+    }
+  }
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+mat-tab {
+  margin-top: 8%;
+
+}

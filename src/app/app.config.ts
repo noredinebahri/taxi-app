@@ -16,7 +16,11 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes), provideAnimationsAsync('noop'), importProvidersFrom(HttpClientModule), provideHttpClient(withInterceptorsFromDi()),
-  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true,
+  },
   BrowserAnimationsModule,
   provideAnimations(),
   importProvidersFrom(ToastrModule.forRoot()),
