@@ -12,11 +12,12 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
     ): MaybeAsync<GuardResult> {
-    if (localStorage.getItem(this.TOKEN_KEY)) {
-      return true;
-    } else {
-      this.router.navigate(['/auth']);
-      return false;
-    }
+    // if (localStorage.getItem(this.TOKEN_KEY)) {
+    //   return true;
+    // } else {
+    //   this.router.navigate(['/auth']);
+    //   return false;
+    // }
+    return true
   }
 }

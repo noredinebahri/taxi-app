@@ -66,7 +66,7 @@ export class BookingComponent implements OnInit {
         this.airports = data;
         this.translateAirportNames(); // Traduire les noms
       },
-      error: (err) => console.error('Erreur de chargement des aéroports', err),
+      error: (err: any) => console.error('Erreur de chargement des aéroports', err),
     });
   }
 
@@ -91,7 +91,7 @@ export class BookingComponent implements OnInit {
       next: (data: any[]) => {
         this.citiesMorocco = data;
       },
-      error: (err) => console.error('Erreur de chargement des villes', err),
+      error: (err: any) => console.error('Erreur de chargement des villes', err),
     });
   }
 

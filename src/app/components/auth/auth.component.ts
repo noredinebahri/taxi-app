@@ -58,7 +58,7 @@ export class AuthComponent {
 
   login() {
     if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe({
+      this.authService.login(this.loginForm.value.email,this.loginForm.value.password).subscribe({
         next: (response) => {
           localStorage.setItem('token', response.token);
           localStorage.setItem('user', JSON.stringify(response.user));  // Optionally store user data

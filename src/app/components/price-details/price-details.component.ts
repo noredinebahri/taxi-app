@@ -29,7 +29,7 @@ toggleDropdown() {
 selectCurrency(code: string) {
   this.selectedCurrency = code;
   this.isDropdownOpen = false;
-  this.convertCurrency()
+  // this.convertCurrency()
 }
 
 getFlag(code: string): string {
@@ -74,37 +74,78 @@ currenciesWithFlags: { code: string, flag: string }[] = [
   selectedCurrency: string = 'USD'; // Devise sélectionnée
   baseCurrency: string = 'USD'; // Devise de base
   convertedAmount: number = 0; // Montant converti
-
+  apiStrips: string = 'http://localhost:3000/api/v1/booking/create-checkout-session';
+  tokenStrips: string = 'pk_test_51KYsoWLQSEoYz0V0mf90aQ2jVfS8fM1440I5xKpCmpnWONeV9SlAJJ6UosWLoHKCQVE6c8CkZNkuBcFEHKEQuQ7V00mXIy08HL';
   async createCheckoutSession(amount: number, description: string) {
-    const response = await fetch('http://localhost:3000/api/v1/booking/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        amount: amount, // Prix dynamique calculé
-        currency: this.selectedCurrency, // Devise (par défaut : USD)
-        description: description, // Description du service
-      }),
-    });
-    const { sessionId } = await response.json();
-    // Redirection vers Stripe Checkout
-    const stripe = await loadStripe('pk_test_51KYsoWLQSEoYz0V0mf90aQ2jVfS8fM1440I5xKpCmpnWONeV9SlAJJ6UosWLoHKCQVE6c8CkZNkuBcFEHKEQuQ7V00mXIy08HL');
-    stripe?.redirectToCheckout({ sessionId });
+    try {
+      // Convertir en centimes pour Stripe (par exemple 10.50 EUR devient 1050)
+      const amountInCents = Math.round(amount * 100);
+      
+      console.log('Envoi des données au serveur:', {
+        amount: amountInCents, // En centimes
+        currency: this.selectedCurrency,
+        description
+      });
+      
+      const response = await fetch(this.apiStrips, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: amountInCents, // En centimes
+          currency: this.selectedCurrency,
+          description: description,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP: ${response.status}`);
+      }
+      
+      const responseData = await response.json();
+      console.log('Réponse du serveur:', responseData);
+      
+      if (!responseData.sessionId) {
+        console.error('Pas de sessionId dans la réponse:', responseData);
+        throw new Error('Pas de sessionId dans la réponse');
+      }
+      
+      // Redirection vers Stripe Checkout
+      const stripe = await loadStripe(this.tokenStrips);
+      if (!stripe) {
+        throw new Error('Impossible de charger Stripe');
+      }
+      
+      const result = await stripe.redirectToCheckout({ 
+        sessionId: responseData.sessionId 
+      });
+      
+      if (result.error) {
+        console.error('Erreur Stripe:', result.error);
+        throw new Error(result.error.message);
+      }
+    } catch (error: any) {
+      console.error('Erreur lors de la création de la session Stripe:', error);
+      alert(`Erreur de paiement: ${error.message}`);
+      throw error;
+    }
   }
+ 
+  // ...
   onCurrencyChange() {
-    this.convertCurrency(); // Appeler la conversion dès que l'utilisateur change la devise
+    // this.convertCurrency(); // Appeler la conversion dès que l'utilisateur change la devise
   }
   currencyChanged: boolean = false;
-  convertCurrency() {
-    this.bookingService.convertCurrency(this.price, this.baseCurrency, this.selectedCurrency).subscribe({
-      next: (response) => {
-        this.convertedAmount = response.currency;
-        this.currencyChanged = true;
-      },
-      error: (err) => {
-        console.error('Erreur de conversion de devise', err);
-      }
-    });
-  }
+  // convertCurrency() {
+  //   this.bookingService.convertCurrency(this.price, this.baseCurrency, this.selectedCurrency).subscribe({
+  //     next: (response:any) => {
+  //       this.convertedAmount = response.currency;
+  //       this.currencyChanged = true;
+  //     },
+  //     error: (err:any) => {
+  //       console.error('Erreur de conversion de devise', err);
+  //     }
+  //   });
+  // }
 
   currency: any;
  
@@ -168,10 +209,19 @@ currenciesWithFlags: { code: string, flag: string }[] = [
     });
   }
 
-  confirmBooking(): void {
-    alert(`🚖 Réservation confirmée au prix de ${this.price} MAD !`);
-    localStorage.removeItem('bookingData');
-    this.router.navigate(['/']);
+  async confirmBooking() {
+    try {
+      const amount = this.currencyChanged ? this.convertedAmount : this.price;
+      const description = `Trajet de ${this.airportName} à ${this.cityName}`;
+      
+      // Attendre que la redirection soit terminée
+      await this.createCheckoutSession(amount, description);
+      
+      // Ces lignes ne seront exécutées que si la redirection échoue
+      // car normalement, l'utilisateur sera redirigé vers Stripe
+    } catch (error) {
+      console.error('Erreur lors de la redirection vers Stripe :', error);
+      this.errorMessage = '❌ Une erreur est survenue lors de la redirection vers le paiement.';
+    }
   }
-
 }
